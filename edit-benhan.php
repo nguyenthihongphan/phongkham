@@ -26,70 +26,6 @@ if(isset($_REQUEST['id']))
                                 echo $today;
 								?>
 
-<?php
-$message = '';
-if(isset($_POST['submit'])) {
-
-  $idbn = $_POST['idbn'];
-  $ngaykham = $_POST['ngaykham'];
-  $tenba = $_POST['tenba'];
-  $idba = $_POST['idba'];
-  $kqdieutri = $_POST['kqdieutri'];
-  $sdt = $_POST['sdt'];
-  $chuandoan = $_POST['chuandoan'];
-  $tenhd = $_POST['tenhd'];
-  $quantities = $_POST['quantities'];
-   $idthuoc =$_POST['loaithuoc'];
-     $idctdonthuocs = $_POST['idctdonthuocs'];
-
-  try {
-
-    $con->beginTransaction();
-
-   $size = sizeof($idctdonthuocs);
-	 $idct =0;
-
-     $curQuantity = 0;
-    for($i = 0; $i < $size; $i++) {
-      $idct =$idctdonthuocs[$i];
-      $curQuantity = $quantities[$i];
-		$stmtDetails =  $con->prepare("INSERT INTO hoadon(
-      idbn,idctdonthuoc,slthuoc,ngay,tenhd,idba)
-      VALUES('$idbn','$idct', '$curQuantity','$ngaykham','$tenhd','$idba')");   
-    $stmtDetails->execute($con->prepare("INSERT INTO hoadon(
-      idbn,idctdonthuoc,slthuoc,ngay,tenhd,idba)
-      VALUES('$idbn','$idct', '$curQuantity','$ngaykham','$tenhd','$idba')"));
-    }
-
-    $con->commit();
-	
-    $message = 'Kê đơn thuốc đã được lưu trữ.';
-
-  }catch(PDOException $ex) {
-    $con->rollback();
-
-    echo $ex->getTraceAsString();
-    echo $ex->getMessage();
-    exit;
-  }
-  
-	  	if($q->themxoasua("INSERT INTO hoadon(tenhd,idbn,idctdonthuoc,ngay,slthuoc,idba) VALUES ('$tenhd' ,'$idbn','$idct','$ngaykham','$curQuantity','$idba')")==1)
-				{	
-					echo '<script >alert("Thêm thành công!"); window.location="medicine.php";</script>';
-					echo header("location:timkiemthuoc.php?goto_page=success.php&message=$message");
-					
-					}
-		
-			
-				else
-				{
-					echo' Tạo không thành công';
-				}
-		
-
-  exit;
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -228,8 +164,7 @@ if(isset($_POST['submit'])) {
          
         </div>
       </div>
-
-      <div class="clearfix">&nbsp;</div>
+        <div class="clearfix">&nbsp;</div>
 
       <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
         <label>Số điện thoại</label>
@@ -249,91 +184,50 @@ if(isset($_POST['submit'])) {
          <div class="col-md-12"><hr /></div>
     <div class="clearfix">&nbsp;</div>
 
-    <div class="row" id="mi_new_prescription">
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-      <label>Tên hóa đơn</label>
-     <input id="tenhd" name="tenhd" class="form-control form-control-sm rounded-0" />
-    </div>
-     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-     
-      <label>Chọn loại thuốc</label>
-                <select name="loaithuoc" id="idloaithuoc"  selected="selected" class="form-control form-control-sm rounded-0">
-                    <option value="">--- Chọn thuốc ---</option>
-                    <?php
-                        $sql = "SELECT * FROM thuoc"; 
-                        $result = $mysqli->query($sql);
-                        while($row = $result->fetch_assoc()){
-                            echo "<option value='".$row['id']."'>".$row['loaithuoc']."</option>";
-                        }
-                    ?>
-                </select>
-    </div>
-     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-      <label>Tên thuốc</label>
-      <select id="tenthuoc" name="tenthuoc" class="form-control form-control-sm rounded-0">
-     
-      </select>
-    </div>
-
-    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-      <label>Số lượng</label>
-      <input id="slthuoc" class="form-control form-control-sm rounded-0" />
-    </div>
-
-
-    <div class="col-lg-1 col-md-1 col-sm-6 col-xs-12">
-      <label>&nbsp;</label>
-      <button id="add_to_list" type="button" class="btn btn-primary btn-sm btn-flat btn-block">
-        <i class="fa fa-plus"></i>
-      </button>
-    </div>
-
-  </div>
-
-  <div class="clearfix">&nbsp;</div>
-  <div class="row table-responsive">
-    <table id="medication_list" class="table table-striped table-bordered">
-      <colgroup>
-        <col width="10%">
-        <col width="50%">
-        <col width="10%">
-        <col width="10%">
-        <col width="15%">
-        <col width="5%">
-      </colgroup>
-      <thead class="bg-primary">
-        <tr>
-          <th>Số</th>
-          <th>Tên thuốc</th>
-         
-          <th>Số lượng</th>
-        
-          <th>Hoạt động</th>
-        </tr>
-      </thead>
-
-      <tbody id="current_medicines_list">
-
-      </tbody>
-    </table>
-  </div>
-
-  <div class="clearfix">&nbsp;</div>
-  <div class="row">
-    <div class="col-md-10">&nbsp;</div>
-    <div class="col-md-2">
-     
-      <button type="submit" id="submit" name="submit" 
-      class="btn btn-primary btn-sm btn-flat btn-block">Save</button>
-  
-<!--<input type="submit" id="luu" name="them" 
-      class="btn btn-primary btn-sm btn-flat btn-block" value="Chọn lưu"/>-->
-    </div>
-  </div>
-</form>
-
 </div>
+    <div class="m-t-20 text-center">
+                               
+                                <input type="submit"  class="btn btn-primary submit-btn" data-dismiss="modal" id="capnhat" name="capnhat" value="Cập nhật bệnh án"/>
+                            </div>
+    <?php
 
+	switch ($_POST['capnhat'])
+	{
+		case'Cập nhật bệnh án':
+	{	
+		$idsua=$_REQUEST['id'];
+		$tenba =$_REQUEST['tenba'];
+		$kqdieutri =$_REQUEST['kqdieutri'];
+		$chuandoan =$_REQUEST['chuandoan'];
+		$tenbn =$_REQUEST['tenbn'];
+		
+		
+		if($chuandoan!='' && $kqdieutri!='')
+		{		
+			if($idsua>0)		  
+		  			{
+				  if($q->themxoasua("UPDATE benhan set tenba='$tenba', kqdieutri='$kqdieutri', chuandoan='$chuandoan' where id='$idsua' limit 1")==1)
+				
+				{	
+					echo '<script language="javascript">alert("Cập nhật thành công!"); window.location="benhan.php";</script>';
+					}
+				else
+				{
+					echo' Cập nhật không thành công';
+				}
+			}
+			else
+			
+		{echo 'Vui lòng nhập đầy đủ';
+			}
+		}
+
+	break;
+	
+	}
+}
+?>
+</form>
 </div>
 <!-- /.card-footer-->
 </div>
@@ -356,104 +250,3 @@ if(isset($_POST['submit'])) {
 
 </body>
 </html>
-
-
-
-<script>
-$( "select[name='loaithuoc']" ).change(function () {
-    var idloaithuoc = $(this).val();
-
-
-    if(idloaithuoc) {
-
-
-        $.ajax({
-            url: "ajax_thuoc.php",
-            dataType: 'Json',
-            data: {'id':idloaithuoc},
-            success: function(data) {
-                $('select[name="tenthuoc"]').empty();
-                $.each(data, function(key, value) {
-                    $('select[name="tenthuoc"]').append('<option value="'+ key +'">'+ value +'</option>');
-                });
-            }
-        });
-
-
-    }else{
-        $('select[name="tenthuoc"]').empty();
-    }
-	 var serial = 1;
-  showMenuSelected("#mi_new_prescription");
- var message = '<?php echo $message;?>';
-
-  if(message !== '') {
-    showCustomMessage(message);
-  }
-
-    $("#add_to_list").click(function() {
-      var idthuoc = $("#tenthuoc").val();
-      var tenthuoc = $("#tenthuoc option:selected").text();
-      
-var idctdonthuoc = $("#idloaithuoc").val();
-var idloaithuoc =  $("#idloaithuoc option:selected").text();
-     
-      var slthuoc = $("#slthuoc").val().trim();
-  
-
-      var oldData = $("#current_medicines_list").html();
-
-      if(idthuoc !== '' && slthuoc !== '') {
-        var inputs = '';
-        inputs = inputs + '<input  type ="hidden" name="idctdonthuocs[]" value="'+idctdonthuoc+'" />';
-        inputs = inputs + '<input  type="hidden" name="quantities[]" value="'+slthuoc+'" />';
-  
-
-
-        var tr = '<tr>';
-        tr = tr + '<td class="px-2 py-1 align-middle">'+serial+'</td>';
-        tr = tr + '<td class="px-2 py-1 align-middle">'+tenthuoc+'</td>';
-       
-        tr = tr + '<td class="px-2 py-1 align-middle">'+slthuoc + inputs +'</td>';
-        tr = tr + '<td class="px-2 py-1 align-middle text-center"><button type="button" class="btn btn-outline-danger btn-sm rounded-0" onclick="deleteCurrentRow(this);"><i class="fa fa-times"></i></button></td>';
-        tr = tr + '</tr>';
-        oldData = oldData + tr;
-        serial++;
-
-        $("#current_medicines_list").html(oldData);
-
-        $("#tenthuoc").val('');
-        
-        $("#slthuoc").val('');
-       
-
-      } 
-
-    });
-
-  });
-
-  function deleteCurrentRow(obj) {
-
-    var rowIndex = obj.parentNode.parentNode.rowIndex;
-    
-    document.getElementById("medication_list").deleteRow(rowIndex);
-  }
-  
-
-
-</script>
-<!-- jQuery -->
-<script src="assets/js/jquery.js"></script>
-<!-- Bootstrap 4 -->
-<script src="assets/js/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="assets/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<!-- <script src="dist/js/demo.js"></script> -->
-
-
-<script src="assets/js/jquery_confirm/jquery-confirm.js"></script>
-
-<script src="assets/js/common_javascript_functions.js"></script>
- 
